@@ -14,7 +14,7 @@ class m140709_173333_widget_text extends Migration
 
         $this->createTable('{{%widget_text}}', [
             'id' => Schema::TYPE_PK,
-            'alias' => Schema::TYPE_STRING . '(1024) NOT NULL',
+            'key' => Schema::TYPE_STRING . '(255) NOT NULL',
             'title' => Schema::TYPE_STRING . '(512) NOT NULL',
             'body' => Schema::TYPE_TEXT . ' NOT NULL',
             'status' => Schema::TYPE_SMALLINT . ' NOT NULL DEFAULT 0',
@@ -23,13 +23,15 @@ class m140709_173333_widget_text extends Migration
         ], $tableOptions);
 
         $this->insert('{{%widget_text}}', [
-            'alias'=>'backend_welcome',
+            'key'=>'backend_welcome',
             'title'=>'Welcome to backend',
             'body'=>'<p>Welcome to Yii2 Starter Kit Dashboard</p>',
             'status'=>1,
             'created_at'=> time(),
             'updated_at'=> time(),
         ]);
+
+        $this->createIndex('idx_widget_text_key', '{{%widget_text}}', 'key');
     }
 
     public function down()

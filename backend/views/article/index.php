@@ -41,13 +41,23 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->author->username;
                 }
             ],
-            'status',
+            [
+                'class'=>\common\components\grid\EnumColumn::className(),
+                'attribute'=>'status',
+                'enum'=>[
+                    Yii::t('backend', 'Disabled'),
+                    Yii::t('backend', 'Enabled')
+                ],
+            ],
             'published_at:datetime',
             'created_at:datetime',
 
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template'=>'{update} {delete}'
+            ],
         ],
     ]); ?>
 

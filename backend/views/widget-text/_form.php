@@ -1,18 +1,18 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\WidgetText */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap\ActiveForm */
 ?>
 
 <div class="text-block-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'alias')->textInput(['maxlength' => 1024]) ?>
+    <?= $form->field($model, 'key')->textInput(['maxlength' => 1024]) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => 512]) ?>
 
@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
             'buttonSource'=>true,
             'convertDivs'=>false,
             'removeEmptyTags'=>false,
-            'imageUpload'=>Yii::$app->urlManager->createUrl(['/file-manager/upload-imperavi'])
+            'imageUpload'=>Yii::$app->urlManager->createUrl(['/file-storage/upload-imperavi'])
 
         ]
     ]) ?>

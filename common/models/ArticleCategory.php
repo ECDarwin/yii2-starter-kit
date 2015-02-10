@@ -2,8 +2,10 @@
 
 namespace common\models;
 
+use common\models\query\ArticleCategoryQuery;
 use Yii;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
 
 /**
@@ -29,9 +31,18 @@ class ArticleCategory extends \yii\db\ActiveRecord
         return '{{%article_category}}';
     }
 
+    /**
+     * @return ArticleCategoryQuery
+     */
+    public static function find()
+    {
+        return new ArticleCategoryQuery(get_called_class());
+    }
+
     public function behaviors()
     {
         return [
+            TimestampBehavior::className(),
             [
                 'class'=>SluggableBehavior::className(),
                 'attribute'=>'title'
@@ -47,9 +58,10 @@ class ArticleCategory extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'required'],
+            [['title'], 'string', 'max' => 512],
             [['slug'], 'unique'],
             [['slug'], 'string', 'max' => 1024],
-            [['title'], 'string', 'max' => 512]
+            ['status', 'integer']
         ];
     }
 

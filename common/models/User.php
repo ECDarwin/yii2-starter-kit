@@ -1,7 +1,6 @@
 <?php
 namespace common\models;
 
-use backend\models\SystemEvent;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -55,6 +54,21 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return array
+     */
+    public function scenarios(){
+        return ArrayHelper::merge(
+            parent::scenarios(),
+            [
+                'oauth_create'=>[
+                    'oauth_client', 'oauth_client_user_id', 'email', 'username', '!status', '!role'
+                ]
+            ]
+        );
+    }
+
+
+    /**
       * @inheritdoc
       */
      public function rules()
@@ -68,6 +82,17 @@ class User extends ActiveRecord implements IdentityInterface
              ['role', 'in', 'range' => [self::ROLE_USER, self::ROLE_MANAGER, self::ROLE_ADMINISTRATOR]],
          ];
      }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => Yii::t('common', 'Username'),
+            'role' => Yii::t('common', 'Role'),
+            'email' => Yii::t('common', 'E-mail'),
+            'status' => Yii::t('common', 'Status'),
+            'created_at' => Yii::t('common', 'Created at')
+        ];
+    }
 
     public function getProfile(){
         return $this->hasOne(UserProfile::className(), ['user_id'=>'id']);
@@ -108,7 +133,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByPasswordResetToken($token)
     {
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire = 60 * 60 * 24; // 1 day
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
         if ($timestamp + $expire < time()) {
@@ -218,6 +243,9 @@ class User extends ActiveRecord implements IdentityInterface
         return $status ? ArrayHelper::getValue($statuses, $status) : $statuses;
     }
 
+    /**
+     * Creates user profile and application event
+     */
     public function afterSignup(){
         SystemEvent::log('user', self::EVENT_AFTER_SIGNUP, [
             'username'=>$this->username,
@@ -225,7 +253,19 @@ class User extends ActiveRecord implements IdentityInterface
             'created_at'=>$this->created_at
         ]);
         $profile = new UserProfile();
+        $profile->locale = Yii::$app->language;
         $this->link('profile', $profile);
         $this->trigger(self::EVENT_AFTER_SIGNUP);
+    }
+
+    public function getPublicIdentity()
+    {
+        if($this->profile && $this->profile->getFullname()){
+            return $this->profile->getFullname();
+        }
+        if($this->username){
+            return $this->username;
+        }
+        return $this->email;
     }
 }

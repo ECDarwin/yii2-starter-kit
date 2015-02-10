@@ -30,6 +30,20 @@ class FileStorageController extends Controller
         ];
     }
 
+    public function actions(){
+        return [
+            'upload'=>[
+                'class'=>'trntv\filekit\actions\UploadAction'
+            ],
+            'upload-imperavi'=>[
+                'class'=>'trntv\filekit\actions\UploadAction',
+                'fileparam'=>'file',
+                'responseUrlParam'=>'filelink',
+                'disableCsrf'=>true
+            ]
+        ];
+    }
+
     /**
      * Lists all FileStorageItem models.
      * @return mixed
@@ -42,9 +56,16 @@ class FileStorageController extends Controller
             'defaultOrder'=>['created_at'=>SORT_DESC]
         ];
 
+        $repositories = \yii\helpers\ArrayHelper::map(
+            FileStorageItem::find()->select('repository')->distinct()->all(), 'repository', 'repository'
+        );
+        $totalSize = FileStorageItem::find()->where(['status' => FileStorageItem::STATUS_UPLOADED])->sum('size');
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalSize'=> $totalSize,
+            'repositories' => $repositories
         ]);
     }
 

@@ -14,10 +14,12 @@ class m140703_123000_user extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => Schema::TYPE_PK,
-            'username' => Schema::TYPE_STRING . ' NOT NULL',
+            'username' => Schema::TYPE_STRING . '(32)',
             'auth_key' => Schema::TYPE_STRING . '(32) NOT NULL',
             'password_hash' => Schema::TYPE_STRING . ' NOT NULL',
             'password_reset_token' => Schema::TYPE_STRING,
+            'oauth_client' => Schema::TYPE_STRING,
+            'oauth_client_user_id' => Schema::TYPE_STRING,
             'email' => Schema::TYPE_STRING . ' NOT NULL',
             'role' => Schema::TYPE_SMALLINT . ' NOT NULL DEFAULT '.\common\models\User::ROLE_USER,
             'status' => Schema::TYPE_SMALLINT . ' NOT NULL DEFAULT '.\common\models\User::STATUS_ACTIVE,
@@ -47,15 +49,26 @@ class m140703_123000_user extends Migration
             'created_at'=>time(),
             'updated_at'=>time()
         ]);
+        $this->insert('{{%user}}', [
+            'id'=>3,
+            'username'=>'user',
+            'email'=>'user@example.com',
+            'password_hash'=>Yii::$app->getSecurity()->generatePasswordHash('user'),
+            'auth_key'=>Yii::$app->getSecurity()->generateRandomString(),
+            'role'=>\common\models\User::ROLE_USER,
+            'status'=>\common\models\User::STATUS_ACTIVE,
+            'created_at'=>time(),
+            'updated_at'=>time()
+        ]);
 
         $this->createTable('{{%user_profile}}', [
-            'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
+            'user_id' => Schema::TYPE_PK,
             'firstname' => Schema::TYPE_STRING . '(255) ',
             'middlename' => Schema::TYPE_STRING . '(255) ',
             'lastname' => Schema::TYPE_STRING . '(255) ',
             'picture' => Schema::TYPE_STRING . '(2048) ',
             'locale' => Schema::TYPE_STRING . '(32) NOT NULL',
-            'gender' => Schema::TYPE_INTEGER . '(1) NOT NULL',
+            'gender' => Schema::TYPE_INTEGER . '(1)',
         ], $tableOptions);
 
         $this->insert('{{%user_profile}}', [
@@ -66,9 +79,11 @@ class m140703_123000_user extends Migration
             'user_id'=>2,
             'locale'=>Yii::$app->sourceLanguage
         ]);
+        $this->insert('{{%user_profile}}', [
+            'user_id'=>3,
+            'locale'=>Yii::$app->sourceLanguage
+        ]);
         if ($this->db->driverName === 'mysql') {
-            $this->addPrimaryKey('pk_user_id', '{{%user_profile}}', 'user_id');
-            $this->createIndex('idx_user_id', '{{%user_profile}}', 'user_id');
             $this->addForeignKey('fk_user', '{{%user_profile}}', 'user_id', '{{%user}}', 'id', 'cascade', 'cascade');
         }
 

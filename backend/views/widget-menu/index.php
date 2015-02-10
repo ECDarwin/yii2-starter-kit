@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\\models\search\WidgetMenuSearch */
+/* @var $searchModel backend\models\search\WidgetMenuSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('backend', 'Widget Menus');
@@ -26,8 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'title',
-            'alias',
-            'status',
+            'key',
+            [
+                'class'=>\common\components\grid\EnumColumn::className(),
+                'attribute'=>'status',
+                'enum'=>[
+                    Yii::t('backend', 'Disabled'),
+                    Yii::t('backend', 'Enabled')
+                ],
+            ],
 
             ['class' => 'yii\grid\ActionColumn', 'template'=>'{update} {delete}'],
         ],

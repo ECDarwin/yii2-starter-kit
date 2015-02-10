@@ -56,6 +56,7 @@ class UserProfile extends \yii\db\ActiveRecord
             'firstname' => Yii::t('common', 'Firstname'),
             'middlename' => Yii::t('common', 'Middlename'),
             'lastname' => Yii::t('common', 'Lastname'),
+            'locale' => Yii::t('common', 'Locale'),
             'picture' => Yii::t('common', 'Picture'),
             'gender' => Yii::t('common', 'Gender'),
         ];
@@ -64,7 +65,7 @@ class UserProfile extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        \Yii::$app->session->setFlash('forceUpdateLocale');
+        Yii::$app->session->setFlash('forceUpdateLocale');
     }
 
     /**
@@ -73,5 +74,13 @@ class UserProfile extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getFullName()
+    {
+        if($this->firstname || $this->lastname){
+            return implode(' ', [$this->firstname, $this->lastname]);
+        }
+        return null;
     }
 }

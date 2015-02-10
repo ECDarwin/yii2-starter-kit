@@ -14,7 +14,7 @@ class m140703_123104_page extends Migration
 
         $this->createTable('{{%page}}', [
             'id' => Schema::TYPE_PK,
-            'alias' => Schema::TYPE_STRING . '(1024) NOT NULL',
+            'slug' => Schema::TYPE_STRING . '(2048) NOT NULL',
             'title' => Schema::TYPE_STRING . '(512) NOT NULL',
             'body' => Schema::TYPE_TEXT . ' NOT NULL',
             'status' => Schema::TYPE_SMALLINT . ' NOT NULL',
@@ -23,12 +23,12 @@ class m140703_123104_page extends Migration
         ], $tableOptions);
 
         $this->insert('{{%page}}', [
-            'alias'=>'about',
+            'slug'=>'about',
             'title'=>'About',
             'body'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'status'=>\common\models\Page::STATUS_PUBLISHED,
-            'created_at'=>new \yii\db\Expression('NOW()'),
-            'updated_at'=>new \yii\db\Expression('NOW()'),
+            'created_at'=>time(),
+            'updated_at'=>time(),
         ]);
     }
 

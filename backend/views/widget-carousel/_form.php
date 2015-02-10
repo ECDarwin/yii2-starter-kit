@@ -1,18 +1,18 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\WidgetCarousel */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap\ActiveForm */
 ?>
 
 <div class="widget-carousel-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'alias')->textInput(['maxlength' => 1024]) ?>
+    <?= $form->field($model, 'key')->textInput(['maxlength' => 1024]) ?>
 
     <?= $form->field($model, 'status')->checkbox() ?>
 

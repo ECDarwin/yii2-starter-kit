@@ -12,19 +12,19 @@ namespace backend\assets;
 use yii\web\AssetBundle;
 
 class BackendAsset extends AssetBundle{
-    public $sourcePath = '@backend/assets/static';
+    public $basePath = '/';
+    public $baseUrl = '@backendUrl';
 
     public $css = [
-        'css/backend.css'
+        'css/style.css'
     ];
     public $js = [
         'js/app.js'
     ];
 
-
     public $depends = [
+        'yii\web\YiiAsset',
         'common\assets\AdminLTE',
-        'common\assets\Respond',
         'common\assets\Html5shiv',
     ];
 } 

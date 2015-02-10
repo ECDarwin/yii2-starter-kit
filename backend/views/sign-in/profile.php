@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\UserProfile */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap\ActiveForm */
 
-$this->title = \Yii::t('backend', 'Edit profile')
+$this->title = Yii::t('backend', 'Edit profile')
 ?>
 
 <div class="user-profile-form">

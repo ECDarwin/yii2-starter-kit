@@ -1,32 +1,32 @@
 <?php
-// Setting environment
-if(isset($_SERVER['YII_ENV'])){
-    defined('YII_ENV') or define('YII_ENV', $_SERVER['YII_ENV']);
-} else {
-    defined('YII_ENV') or define('YII_ENV', 'local');
-}
+// Composer
+require(__DIR__ . '/../../vendor/autoload.php');
 
-// Debug preparations
-defined('YII_DEBUG') or define('YII_DEBUG', YII_ENV != 'prod');
-defined('YII_ENV_DEV') or define('YII_ENV_DEV', YII_ENV != 'prod');
+// Environment
+require(__DIR__ . '/../../common/Environment.php');
+$environment = new Environment([
+    //'envVar'=>'YII_ENV',
+    //'env'=>null,
+    //'debugVar'=>'YII_DEBUG',
+    //'debug'=>null,
+]);
 
-if(YII_DEBUG){
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-}
-
-// Starting Application
-require(dirname(__DIR__) . '/../vendor/autoload.php');
-require(dirname(__DIR__) . '/../vendor/yiisoft/yii2/Yii.php');
+// Yii
+require(__DIR__ . '/../../vendor/yiisoft/yii2/Yii.php');
 
 // Bootstrap application
-require(dirname(__DIR__) . '/../environments/'.YII_ENV.'/bootstrap.php');
+require(__DIR__ . '/../../common/config/bootstrap.php');
+
 
 $config = \yii\helpers\ArrayHelper::merge(
-    require(dirname(__DIR__).'/../common/config/web.php'),
-    require(dirname(__DIR__).'/config/web.php'),
-    require(dirname(__DIR__) . '/../environments/'.YII_ENV.'/common/config/web.php'),
-    require(dirname(__DIR__) . '/../environments/'.YII_ENV.'/frontend/config/web.php')
+    // Common
+    require(__DIR__ . '/../../common/config/base.php'),
+    require(__DIR__ . '/../../common/config/base-local.php'),
+    require(__DIR__ . '/../../common/config/web.php'),
+    require(__DIR__ . '/../../common/config/web-local.php'),
+    require(__DIR__ . '/../config/base.php'),
+    require(__DIR__ . '/../config/web.php'),
+    require(__DIR__ . '/../config/web-local.php')
 );
 
 (new yii\web\Application($config))->run();

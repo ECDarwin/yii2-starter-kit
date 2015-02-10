@@ -1,12 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\UserProfile */
-/* @var $form yii\widgets\ActiveForm */
-$this->title = \Yii::t('backend', 'Edit account')
+/* @var $form yii\bootstrap\ActiveForm */
+$this->title = Yii::t('backend', 'Edit account')
 ?>
 
 <div class="user-profile-form">
@@ -20,7 +20,7 @@ $this->title = \Yii::t('backend', 'Edit account')
     <?= $form->field($model, 'password_confirm')->passwordInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('frontend', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('backend', 'Update'), ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

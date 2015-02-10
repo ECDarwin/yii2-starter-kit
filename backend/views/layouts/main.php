@@ -29,17 +29,17 @@ use yii\widgets\Breadcrumbs;
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>
                         <span class="badge bg-green">
-                            <?= \backend\models\SystemEvent::find()->today()->count() ?>
+                            <?= \common\models\SystemEvent::find()->today()->count() ?>
                         </span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="header">
-                            <?= Yii::t('backend', 'You have {num} events', ['num'=>\backend\models\SystemEvent::find()->today()->count()]) ?>
+                            <?= Yii::t('backend', 'You have {num} events', ['num'=>\common\models\SystemEvent::find()->today()->count()]) ?>
                         </li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <?php foreach(\backend\models\SystemEvent::find()->today()->orderBy(['event_time'=>SORT_DESC])->limit(10)->all() as $eventRecord): ?>
+                                <?php foreach(\common\models\SystemEvent::find()->today()->orderBy(['created_at'=>SORT_DESC])->limit(10)->all() as $eventRecord): ?>
                                     <li>
                                         <a href="<?= Yii::$app->urlManager->createUrl(['/system-event/view', 'id'=>$eventRecord->id]) ?>">
                                             <i class="fa fa-bell"></i>
@@ -51,6 +51,7 @@ use yii\widgets\Breadcrumbs;
                         </li>
                         <li class="footer">
                             <?= Html::a(Yii::t('backend', 'View all'), ['/system-event/index']) ?>
+                            <?= Html::a(Yii::t('backend', 'Timeline'), ['/system-event/timeline']) ?>
                         </li>
                     </ul>
                 </li>
@@ -128,14 +129,14 @@ use yii\widgets\Breadcrumbs;
                 </div>
                 <div class="pull-left info">
                     <p><?= Yii::t('backend', 'Hello, {username}', ['username'=>Yii::$app->user->identity->username]) ?></p>
-                    <a href="#">
+                    <a href="<?php echo \yii\helpers\Url::to(['/sign-in/profile']) ?>">
                         <i class="fa fa-circle text-success"></i>
                         <?= Yii::$app->formatter->asDatetime(time()) ?>
                     </a>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <?= \common\components\widgets\menu\MenuWidget::widget([
+            <?= backend\components\widgets\Menu::widget([
                 'options'=>['class'=>'sidebar-menu'],
                 'labelTemplate' => '<a href="#">{icon}<span>{label}</span>{right-icon}{badge}</a>',
                 'linkTemplate' => '<a href="{url}">{icon}<span>{label}</span>{right-icon}{badge}</a>',
@@ -143,9 +144,9 @@ use yii\widgets\Breadcrumbs;
                 'activateParents'=>true,
                 'items'=>[
                     [
-                        'label'=>Yii::t('backend', 'Dashboard'),
+                        'label'=>Yii::t('backend', 'Timeline'),
                         'icon'=>'<i class="fa fa-bar-chart-o"></i>',
-                        'url'=>['/site/index']
+                        'url'=>['/system-event/timeline']
                     ],
                     [
                         'label'=>Yii::t('backend', 'Content'),
@@ -163,7 +164,8 @@ use yii\widgets\Breadcrumbs;
                     [
                         'label'=>Yii::t('backend', 'Users'),
                         'icon'=>'<i class="fa fa-users"></i>',
-                        'url'=>['/user/index']
+                        'url'=>['/user/index'],
+                        'visible'=>Yii::$app->user->can('administrator')
                     ],
                     [
                         'label'=>Yii::t('backend', 'System'),
@@ -180,13 +182,14 @@ use yii\widgets\Breadcrumbs;
                                 ]
                             ],
                             ['label'=>Yii::t('backend', 'Key-Value Storage'), 'url'=>['/key-storage/index'], 'icon'=>'<i class="fa fa-angle-double-right"></i>'],
+                            ['label'=>Yii::t('backend', 'Cache'), 'url'=>['/cache/index'], 'icon'=>'<i class="fa fa-angle-double-right"></i>'],
                             ['label'=>Yii::t('backend', 'File Storage Items'), 'url'=>['/file-storage/index'], 'icon'=>'<i class="fa fa-angle-double-right"></i>'],
                             ['label'=>Yii::t('backend', 'File Manager'), 'url'=>['/file-manager/index'], 'icon'=>'<i class="fa fa-angle-double-right"></i>'],
                             [
                                 'label'=>Yii::t('backend', 'System Events'),
                                 'url'=>['/system-event/index'],
                                 'icon'=>'<i class="fa fa-angle-double-right"></i>',
-                                'badge'=>\backend\models\SystemEvent::find()->today()->count(),
+                                'badge'=>\common\models\SystemEvent::find()->today()->count(),
                                 'badgeBgClass'=>'bg-green',
                             ],
                             [

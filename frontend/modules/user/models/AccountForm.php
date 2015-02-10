@@ -23,15 +23,24 @@ class AccountForm extends Model
             ['username', 'required'],
             ['username', 'unique',
                 'targetClass'=>'\common\models\User',
-                'message' => \Yii::t('frontend', 'This username has already been taken.'),
+                'message' => Yii::t('frontend', 'This username has already been taken.'),
                 'filter'=>function($query){
                     $query->andWhere(['not', ['id'=>Yii::$app->user->id]]);
                 }
             ],
             ['username', 'string', 'min' => 1, 'max' => 255],
-
+            ['password', 'string'],
             [['password_confirm'], 'compare', 'compareAttribute' => 'password'],
 
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'username'=>Yii::t('frontend', 'Username'),
+            'password'=>Yii::t('frontend', 'Password'),
+            'password_confirm'=>Yii::t('frontend', 'Confirm Password')
         ];
     }
 }

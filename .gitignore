@@ -1,16 +1,13 @@
-# Application
-/environments/*
-!/environments/local
+# Env
+/.env
 
-# Storage
-/storage/uploads
-
-# composer vendor dir
-/vendor
+# Local config files
+*-local.*
+!environments/*-local.*
 
 # composer
+/vendor
 composer.phar
-composer.lock
 
 # IDE
 .idea
@@ -24,9 +21,6 @@ Thumbs.db
 
 # Mac DS_Store Files
 .DS_Store
-
-# NPM
-/node_modules
 
 # phpunit itself is not needed
 phpunit.phar

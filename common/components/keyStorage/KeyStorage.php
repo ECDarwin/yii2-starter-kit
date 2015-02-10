@@ -10,6 +10,7 @@ namespace common\components\keyStorage;
 
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class KeyStorage
@@ -43,6 +44,7 @@ class KeyStorage extends Component{
         $this->_values[$key] = $value;
         $model = $this->getModel($key);
         if(!$model) $model = new $this->modelClass;
+        $model->key = $key;
         $model->value = $value;
         return $model->save();
     }
@@ -65,15 +67,12 @@ class KeyStorage extends Component{
     public function get($key, $default = null, $cache = true){
         if($cache){
             $cacheKey = sprintf('%s.%s', $this->cachePrefix, $key);
-            $value = ArrayHelper::getValue($this->_values, $key, false)
-                ? ArrayHelper::getValue($this->_values, $key, false)
-                : $value = \Yii::$app->cache->get($cacheKey);
+            $value = ArrayHelper::getValue($this->_values, $key, false) ?: Yii::$app->cache->get($cacheKey);
             if($value === false){
-                $model = $this->getModel($key);
-                if($model){
+                if($model = $this->getModel($key)){
                     $value = $model->value;
                     $this->_values[$key] = $value;
-                    \Yii::$app->cache->set($cacheKey, $value, $this->cachingDuration);
+                    Yii::$app->cache->set($cacheKey, $value, $this->cachingDuration);
                 } else {
                     $value = $default;
                 }
@@ -83,6 +82,17 @@ class KeyStorage extends Component{
             $value = $model ? $model->value : $default;
         }
         return $value;
+    }
+
+    /**
+     * @param array $keys
+     */
+    public function getAll(array $keys){
+        $values = [];
+        foreach($keys as $key){
+            $values[$key] = $this->get($key);
+        }
+        return $values;
     }
 
     /**

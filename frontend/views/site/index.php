@@ -4,8 +4,8 @@ $this->title = Yii::$app->name;
 ?>
 <div class="site-index">
 
-    <?= \common\components\widgets\carousel\CarouselWidget::widget([
-        'alias'=>'index'
+    <?= \common\components\widgets\DbCarousel::widget([
+        'key'=>'index'
     ]) ?>
 
     <div class="jumbotron">
@@ -13,7 +13,13 @@ $this->title = Yii::$app->name;
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <?php echo common\components\widgets\DbMenu::widget([
+            'key'=>'frontend-index',
+            'options'=>[
+                'tag'=>'p'
+            ]
+        ]) ?>
+
     </div>
 
     <div class="body-content">
